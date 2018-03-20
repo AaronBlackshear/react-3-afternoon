@@ -21,20 +21,21 @@ class App extends Component {
   }
   
   componentDidMount() {
-    var posted = axios.get("https://practiceapi.devmountain.com/api/posts").then(response => {
-      console.log(response.data)
+    axios.get("https://practiceapi.devmountain.com/api/posts").then(response => {
     return this.setState({posts: response.data})
     })
   }
 
   updatePost(id,text) {
-    var updated = axios.put(`https://practiceapi.devmountain.com/api/posts${ id }`, { text }).then(res => {
+    var updated = axios.put(`https://practiceapi.devmountain.com/api/posts?id=${ id }`, { text }).then(res => {
       return this.setState({posts: res.data})
     })
   }
 
-  deletePost() {
-
+  deletePost(id) {
+    axios.delete(`https://practiceapi.devmountain.com/api/posts?id=${ id }`).then(res => {
+      return this.setState({posts: res.data})
+    })
   }
 
   createPost() {
@@ -46,7 +47,7 @@ class App extends Component {
 
 
     let postList = posts.map((e,i) => {
-      return <Post key={i} text={e.text} date={e.date} updatePostFn={this.updatePost} id={i} />
+      return <Post key={i} text={JSON.stringify(e.text)} date={e.date} updatePostFn={this.updatePost} deletePostFn={this.deletePost} id={e.id} />
     });
     return (
       <div className="App__parent">
